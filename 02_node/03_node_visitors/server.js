@@ -15,6 +15,6 @@ app.get('/', function(req, res) {
   visitors = visitors + ', ' + req.ip;
 });
 
-app.listen(port, function() {
+app.listen(port, "0.0.0.0", function() {
   console.log('Example app listening on port ' + port);
 });
