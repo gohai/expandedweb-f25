@@ -1,3 +1,6 @@
+// Expanded Web
+// NYUSH F25 - gohai
+
 let y = 100;
 let speedY = 0;
 

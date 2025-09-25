@@ -1,3 +1,6 @@
+// Expanded Web
+// NYUSH F25 - gohai
+
 let messages = [];
 let favColor;
 let favCoords;
