@@ -55,6 +55,6 @@ io.on('connection', function(socket) {
 });
 
 // this is now also "server" rather than "app"
-server.listen(port, "0.0.0.0", function() {
+server.listen(port, '0.0.0.0', function() {
   console.log('Example app listening on port ' + port);
 });

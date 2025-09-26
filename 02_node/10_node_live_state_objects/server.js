@@ -57,6 +57,6 @@ io.on('connection', function(socket) {
   });
 });
 
-server.listen(port, "0.0.0.0", function() {
+server.listen(port, '0.0.0.0', function() {
   console.log('Example app listening on port ' + port);
 });
