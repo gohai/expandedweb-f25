@@ -1,0 +1,25 @@
+// Expanded Web
+// NYUSH F25 - gohai
+
+let inputEl;
+
+function setup() {
+  noCanvas();
+
+  inputEl = createInput();
+  let buttonEl = createButton('Submit');
+  buttonEl.mouseClicked(postMessage);
+}
+
+function draw() {
+}
+
+function postMessage() {
+  message = {
+    text: inputEl.value(),
+  }
+
+  // this sends a HTTP POST request to /say
+  httpPost('/say', 'json', message);
+  inputEl.value('');
+}
