@@ -42,8 +42,12 @@ async function tryConnectArduino(baudRate = 57600) {
       arduino = new SerialPort({
         path: port.path,
         baudRate: baudRate,
+      }, function(err) {
+        if (err) {
+          console.error(err.message);
+        }
       });
-      console.log('Opened connection with Arduino serial number ' + port.serialNumber);
+      console.log('Opening connection with Arduino serial number ' + port.serialNumber);
     }
   } catch (e) {
     console.error('Error opening Arduino:', e);
