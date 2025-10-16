@@ -46,6 +46,7 @@ function draw() {
     }
   }
 
+  textSize(18);
   text(instruction, 50, 50);
 }
 
