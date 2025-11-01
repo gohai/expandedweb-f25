@@ -12,7 +12,9 @@ def do_connect():
     ap.config(essid='Expanded Web')
     # we could also set the channel (1-13) here
     print('Starting WiFi access point...')
-    print('Network config:', ap.ipconfig('addr4'))
+    ap_ip = ap.ipconfig('addr4')[0]
+    print('Network config:', ap_ip)
+    return ap_ip
 
 do_connect()
 

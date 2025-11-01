@@ -12,7 +12,7 @@ def do_connect():
         wlan.connect('nyu-iot', '12345670')
         while not wlan.isconnected():
             machine.idle()
-    print('Network config:', wlan.ipconfig('addr4'))
+    print('Network config:', wlan.ipconfig('addr4')[0])
 
 do_connect()
 
