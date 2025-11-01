@@ -6,13 +6,13 @@
 def do_connect():
     import network
     # AP_IF makes it set up its own access point
-    wifi = network.WLAN(network.AP_IF)
-    wifi.active(True)
+    ap = network.WLAN(network.AP_IF)
+    ap.active(True)
     # make sure to change this to a unique name!
-    wifi.config(essid='Expanded Web')
+    ap.config(essid='Expanded Web')
     # we could also set the channel (1-13) here
     print('Starting WiFi access point...')
-    print('Network config:', wifi.ipconfig('addr4'))
+    print('Network config:', ap.ipconfig('addr4'))
 
 do_connect()
 
