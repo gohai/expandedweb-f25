@@ -30,9 +30,6 @@ async def index(request):
 
 @app.route('/<path:path>')
 async def static(request, path):
-    if '..' in path:
-        # directory traversal is not allowed
-        return 'Not found', 404
     import os
     try:
         os.stat('/public/' + path)

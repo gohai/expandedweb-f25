@@ -55,8 +55,6 @@ async def index(request):
 
 @app.route('/<path:path>')
 async def static(request, path):
-    if '..' in path:
-        return 'Not found', 404
     import os
     try:
         os.stat('/public/' + path)
