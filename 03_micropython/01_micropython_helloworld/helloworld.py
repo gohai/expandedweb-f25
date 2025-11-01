@@ -24,4 +24,8 @@ async def index(request):
     return 'Hello from ESP'
 
 print('Starting webserver')
-app.run(port=80)
+try:
+    app.run(port=80)
+except KeyboardInterrupt:
+    app.shutdown()  # prevents EADDRINUSE
+    print('Server stopped')

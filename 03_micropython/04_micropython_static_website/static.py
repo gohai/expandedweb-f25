@@ -35,11 +35,15 @@ async def static(request, path):
         return 'Not found', 404
     import os
     try:
-        os.stat('public/' + path)
-        return send_file('public/' + path, max_age=86400)
+        os.stat('/public/' + path)
+        return send_file('/public/' + path, max_age=86400)
     except OSError:
         # this returns 404 if the file doesn't exist
         return 'Not found', 404
 
 print('Starting webserver')
-app.run(port=80)
+try:
+    app.run(port=80)
+except KeyboardInterrupt:
+    app.shutdown()  # prevents EADDRINUSE
+    print('Server stopped')
