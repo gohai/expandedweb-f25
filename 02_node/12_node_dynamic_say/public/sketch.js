@@ -15,7 +15,7 @@ function draw() {
 }
 
 function postMessage() {
-  message = {
+  let message = {
     text: inputEl.value(),
   }
 

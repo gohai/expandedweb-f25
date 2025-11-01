@@ -35,7 +35,7 @@ function gotMessages(data) {
 function postMessage() {
   // you could put any additional data into this object
   // to be sent to the backend and stored there
-  message = {
+  let message = {
     text: inputEl.value(),
   };
 

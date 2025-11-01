@@ -57,7 +57,7 @@ function postMessage() {
   if (!favColor)
     return;
 
-  message = {
+  let message = {
     r: red(favColor),
     g: green(favColor),
     b: blue(favColor),

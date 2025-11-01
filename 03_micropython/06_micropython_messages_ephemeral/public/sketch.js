@@ -45,7 +45,7 @@ function gotMessages(data) {
 }
 
 function postMessage() {
-  message = {
+  let message = {
     text: inputEl.value(),
   };
 
