@@ -1,7 +1,5 @@
 # Expanded Web
 # NYUSH F25 - gohai
-# The microcontroller must be registered with
-# NYU Shanghai IoT for this example to work.
 
 def do_connect():
     import network
