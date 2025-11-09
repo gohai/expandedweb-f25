@@ -25,6 +25,7 @@ app = Microdot()
 # from the website containing color information,
 # and sets a Neopixel RGB light on pin 23 accordingly
 
+from machine import Pin
 from neopixel import NeoPixel
 pin = Pin(23, Pin.OUT)
 leds = NeoPixel(pin, 1) # 1 .. how many LEDs

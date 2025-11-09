@@ -47,7 +47,7 @@ servo = Servo(pin=23)
 @app.post('/servo')
 async def set_servo(request):
     print(request.json)
-    servo.angle(request.angle)
+    servo.angle(request.json['angle'])
     return 'OK'
 
 

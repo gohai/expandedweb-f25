@@ -21,9 +21,9 @@ function mousePressed() {
   let c = get(mouseX, mouseY);
 
   let data = {
-    r: floor(c.red()),
-    g: floor(c.green()),
-    b: floor(c.blue()),
+    r: floor(red(c)),
+    g: floor(green(c)),
+    b: floor(blue(c)),
   };
 
   // this sends a HTTP POST request to /rgb
