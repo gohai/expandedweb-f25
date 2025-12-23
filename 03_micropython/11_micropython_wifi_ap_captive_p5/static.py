@@ -12,11 +12,16 @@ def do_connect():
     print('Network config:', ap_ip)
     return ap_ip
 
-ap_ip = do_connect()
+do_connect()
+
 
 from microdot import Microdot, send_file
-
 app = Microdot()
+
+from captiveportal import run_dns_server, register_captive_routes
+import uasyncio as asyncio
+
+register_captive_routes(app)
 
 
 # this code makes all files inside the public
@@ -34,21 +39,17 @@ async def static(request, path):
         os.stat('/public/' + path)
         return send_file('/public/' + path, max_age=86400)
     except OSError:
-        # for the captive portal, redirect to / for files that don't exist
-        return '', 302, {'Location': '/'}
+        # this returns 404 if the file doesn't exist
+        # XXX: test
+        print('404 for ' + request.method + ' ' + request.path)
+        return 'Not found', 404
+        # for the captive portal, redirect to / for files that don't exist?
+        #return '', 302, {'Location': '/'}
 
-
-# after all your own microdot routes, call this function
-# which is needed for the captive portal to work
-
-from captiveportal import start_dns_server, register_captive_routes
-import uasyncio as asyncio
-
-register_captive_routes(app)
 
 async def main():
     print('Starting webserver')
-    asyncio.create_task(start_dns_server(ap_ip))
+    asyncio.create_task(run_dns_server())
     try:
         await app.start_server(host='0.0.0.0', port=80, debug=False)
     except KeyboardInterrupt:
