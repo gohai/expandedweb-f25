@@ -1,53 +1,55 @@
 import socket
 import uasyncio as asyncio
 
-async def start_dns_server(ap_ip):
-    # Very small DNS server that replies to ANY A-query with our AP IP.
-    # This is the classic captive-portal trick.
-    ip_bytes = bytes(int(x) for x in ap_ip.split('.'))
+# based on metachris/micropython-captiveportal
+class DNSQuery:
+    def __init__(self, data):
+        self.data = data
+        self.domain = ''
+        tipo = (data[2] >> 3) & 15  # Opcode bits
+        if tipo == 0:  # Standard query
+            ini = 12
+            lon = data[ini]
+            while lon != 0:
+                self.domain += data[ini + 1:ini + lon + 1].decode('utf-8') + '.'
+                ini += lon + 1
+                lon = data[ini]
+        #print('DNSQuery domain: ' + self.domain)
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.setblocking(False)
-    s.bind(('0.0.0.0', 53))
-    print('DNS server listening on 53, forcing to', ap_ip)
+    def response(self, ip):
+        #print('DNSQuery response: {} ==> {}'.format(self.domain, ip))
+        if self.domain:
+            packet = self.data[:2] + b'\x81\x80'
+            packet += self.data[4:6] + self.data[4:6] + b'\x00\x00\x00\x00'  # Questions and Answers Counts
+            packet += self.data[12:]  # Original Domain Name Question
+            packet += b'\xC0\x0C'  # Pointer to domain name
+            packet += b'\x00\x01\x00\x01\x00\x00\x00\x3C\x00\x04'  # Response type, ttl and resource data length -> 4 bytes
+            packet += bytes(map(int, ip.split('.')))  # 4 bytes of IP
+        return packet
+
+# based on metachris/micropython-captiveportal
+async def run_dns_server(target = '192.168.4.1'):
+    """ function to handle incoming dns requests """
+    udps = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udps.setblocking(False)
+    udps.bind(('0.0.0.0', 53))
 
     while True:
         try:
-            data, addr = s.recvfrom(512)
-        except OSError:
-            await asyncio.sleep(0)
-            continue
+            yield asyncio.core._io_queue.queue_read(udps)
+            data, addr = udps.recvfrom(4096)
+            #print('Incoming DNS request...')
 
-        if not data:
-            await asyncio.sleep(0)
-            continue
+            DNS = DNSQuery(data)
+            udps.sendto(DNS.response(target), addr)
 
-        # build DNS response
-        dns_id = data[0:2]
-        flags = b'\x81\x80'          # standard query response, no error
-        qdcount = b'\x00\x01'
-        ancount = b'\x00\x01'
-        nscount = b'\x00\x00'
-        arcount = b'\x00\x00'
-        header = dns_id + flags + qdcount + ancount + nscount + arcount
+            #print('Replying: {:s} -> {:s}'.format(DNS.domain, target))
 
-        question = data[12:]
+        except Exception as e:
+            print("DNS server error:", e)
+            await asyncio.sleep_ms(3000)
 
-        # answer: name is pointer to question (0xc00c)
-        answer = b'\xc0\x0c'         # pointer to offset 12
-        answer += b'\x00\x01'        # type A
-        answer += b'\x00\x01'        # class IN
-        answer += b'\x00\x00\x00\x1e'  # TTL = 30s
-        answer += b'\x00\x04'        # IPv4 length
-        answer += ip_bytes
-
-        resp = header + question + answer
-        try:
-            s.sendto(resp, addr)
-        except OSError:
-            pass
-
-        await asyncio.sleep(0)
+    udps.close()
 
 def register_captive_routes(app):
     # Android / ChromeOS
@@ -60,21 +62,22 @@ def register_captive_routes(app):
         return '', 302, {'Location': '/'}
 
     # Apple
+    # redirecting with 302 doesn't seem to work always
     @app.route('/hotspot-detect.html')
     async def apple_captive(request):
-        return '', 302, {'Location': '/'}
+        #print('Got GET request for /hotspot-detect.html')
+        html = '<!DOCTYPE html>'
+        html += '<html>'
+        html += '<head>'
+        html += '<meta http-equiv="refresh" content="0; URL=/" />'
+        html += '</head>'
+        html += '<body></body>'
+        html += '</html>'
+        return html, { 'Content-Type': 'text/html' }
 
     # Windows
     @app.route('/ncsi.txt')
     async def windows_ncsi(request):
-        return 'Microsoft NCSI', 200
-
-    # ignore
-    @app.route('/favicon.ico')
-    async def favicon(request):
-        return '', 204
-
-    # redirect everything else
-    @app.route('/<path:path>')
-    async def catch_all(request, path):
+        # XXX: test
         return '', 302, {'Location': '/'}
+        #return 'Microsoft NCSI', 200

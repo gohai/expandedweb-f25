@@ -20,7 +20,6 @@ app = Microdot()
 
 from captiveportal import run_dns_server, register_captive_routes
 import uasyncio as asyncio
-
 register_captive_routes(app)
 
 
@@ -39,12 +38,7 @@ async def static(request, path):
         os.stat('/public/' + path)
         return send_file('/public/' + path, max_age=86400)
     except OSError:
-        # this returns 404 if the file doesn't exist
-        # XXX: test
-        print('404 for ' + request.method + ' ' + request.path)
         return 'Not found', 404
-        # for the captive portal, redirect to / for files that don't exist?
-        #return '', 302, {'Location': '/'}
 
 
 async def main():

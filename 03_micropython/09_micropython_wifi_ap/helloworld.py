@@ -17,11 +17,13 @@ def do_connect():
 do_connect()
 
 from microdot import Microdot
-
 app = Microdot()
+
+
 @app.route('/')
 async def index(request):
     return 'Hello from ESP'
+
 
 print('Starting webserver')
 try:

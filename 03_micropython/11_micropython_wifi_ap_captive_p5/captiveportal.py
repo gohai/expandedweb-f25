@@ -62,33 +62,22 @@ def register_captive_routes(app):
         return '', 302, {'Location': '/'}
 
     # Apple
-    # XXX: does this work with 302?
+    # redirecting with 302 doesn't seem to work always
     @app.route('/hotspot-detect.html')
     async def apple_captive(request):
-        print('Got GET request for /hotspot-detect.html')
-        #html = '<!DOCTYPE html>'
-        #html += '<html>'
-        #html += '<head>'
-        #html += '<meta http-equiv="refresh" content="0; URL=/" />'
-        #html += '</head>'
-        #html += '<body>Loading...</body>'
-        #html += '</html>'
-        #return html, { 'Content-Type': 'text/html' }
-        return '', 302, {'Location': '/'}
+        #print('Got GET request for /hotspot-detect.html')
+        html = '<!DOCTYPE html>'
+        html += '<html>'
+        html += '<head>'
+        html += '<meta http-equiv="refresh" content="0; URL=/" />'
+        html += '</head>'
+        html += '<body></body>'
+        html += '</html>'
+        return html, { 'Content-Type': 'text/html' }
 
     # Windows
     @app.route('/ncsi.txt')
     async def windows_ncsi(request):
-        return 'Microsoft NCSI', 200
-
-    # XXX: ignore favicon
-    #@app.route('/favicon.ico')
-    #async def favicon(request):
-    #    return '', 204
-
-    # XXX: do we need a catch-all?
-    # redirect everything else
-    #@app.route('/<path:path>')
-    #async def catch_all(request, path):
-    #    print('Redirecting ' + request.method + ' ' + request.path + ' to /')
-    #    return '', 302, {'Location': '/'}
+        # XXX: test
+        return '', 302, {'Location': '/'}
+        #return 'Microsoft NCSI', 200
