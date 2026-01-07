@@ -76,8 +76,10 @@ def register_captive_routes(app):
         return html, { 'Content-Type': 'text/html' }
 
     # Windows
+    # earlier www.msftncsi.com/ncsi.txt,
+    # more recently www.msftconnecttest.com/connecttest.txt
     @app.route('/ncsi.txt')
+    @app.route('/connecttest.txt')
+    @app.route('/redirect')
     async def windows_ncsi(request):
-        # XXX: test
         return '', 302, {'Location': '/'}
-        #return 'Microsoft NCSI', 200
