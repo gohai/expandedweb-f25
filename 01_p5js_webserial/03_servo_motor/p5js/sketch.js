@@ -1,9 +1,12 @@
+// Press and hold the mouse button to actuate
+// the servo motor
+
 let port;
 let connectBtn;
 
-let pos = 0;    // displacement from center
-let speed = 0;  // velocity
-let k = 0.005;  // spring constant
+let pos = 0; // displacement from center
+let speed = 0; // velocity
+let k = 0.005; // spring constant
 let damping = 0.995;
 let mousePressedTime = 0;
 let circleSize = 0;
@@ -12,20 +15,17 @@ function setup() {
   createCanvas(400, 200);
 
   port = createSerial();
+  connectBtn = createButton("Connect to Arduino");
+  connectBtn.mousePressed(connectBtnClick);
 
   // in setup, we can open ports we have used previously
   // without user interaction
-
   let usedPorts = usedSerialPorts();
   if (usedPorts.length > 0) {
     port.open(usedPorts[0], 57600);
+    connectBtn.html("Disconnect");
+    //connectBtn.hide();
   }
-
-  // any other ports can be opened via a dialog after
-  // user interaction (see connectBtnClick below)
-
-  connectBtn = createButton("Connect to Arduino");
-  connectBtn.mousePressed(connectBtnClick);
 }
 
 function draw() {
@@ -37,12 +37,12 @@ function draw() {
   speed += force;
   speed *= damping;
   pos += speed;
-  
-  let servoPos = map(pos, -width/2, width/2, 0, 180);  // to 0-180
-  servoPos = constrain(pos, 0, 180);          // make sure we don't go beyond
-  servoPos = floor(servoPos);                 // floor() to get rid of decimals
-  port.write(servoPos+"\n");
-  
+
+  let servoPos = map(pos, -width / 2, width / 2, 0, 180); // to 0-180
+  servoPos = constrain(pos, 0, 180); // make sure we don't go beyond
+  servoPos = floor(servoPos); // floor() to get rid of decimals
+  port.println(servoPos);
+
   // draw the mass
   noStroke();
   fill(50);
@@ -68,6 +68,12 @@ function mouseReleased() {
 }
 
 function connectBtnClick() {
-  port.open("Arduino", 57600);
-  connectBtn.hide();
+  if (connectBtn.html() != "Disconnect") {
+    port.open("Arduino", 57600);
+    connectBtn.html("Disconnect");
+    //connectBtn.hide();
+  } else {
+    port.close();
+    connectBtn.html("Connect to Arduino");
+  }
 }

@@ -5,20 +5,17 @@ function setup() {
   createCanvas(400, 200);
 
   port = createSerial();
+  connectBtn = createButton("Connect to Arduino");
+  connectBtn.mousePressed(connectBtnClick);
 
   // in setup, we can open ports we have used previously
   // without user interaction
-
   let usedPorts = usedSerialPorts();
   if (usedPorts.length > 0) {
     port.open(usedPorts[0], 57600);
+    connectBtn.html("Disconnect");
+    //connectBtn.hide();
   }
-
-  // any other ports can be opened via a dialog after
-  // user interaction (see connectBtnClick below)
-
-  connectBtn = createButton("Connect to Arduino");
-  connectBtn.mousePressed(connectBtnClick);
 }
 
 function draw() {
@@ -33,10 +30,16 @@ function draw() {
 
   let servoPos1 = floor(map(pos1, -1, 1, 0, 180));  // floor() to get rid of decimals
   let servoPos2 = floor(map(pos2, -1, 1, 0, 180));
-  port.write(servoPos1 + "," + servoPos2 + "\n");
+  port.println(servoPos1 + "," + servoPos2);
 }
 
 function connectBtnClick() {
-  port.open("Arduino", 57600);
-  connectBtn.hide();
+  if (connectBtn.html() != "Disconnect") {
+    port.open("Arduino", 57600);
+    connectBtn.html("Disconnect");
+    //connectBtn.hide();
+  } else {
+    port.close();
+    connectBtn.html("Connect to Arduino");
+  }
 }
