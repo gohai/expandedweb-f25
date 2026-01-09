@@ -12,3 +12,5 @@
 * `03_micropython`: Add an example that explores solar/battery (`IO0`)
 * `03_micropython`: Add an example that combines ESP32 with Arduino (as peripheral)
 * `03_micropython`: Explore [camera](https://github.com/lemariva/micropython-camera-driver)?
+* `03_micropython`: Consider developing a socket.io-compatible library
+* `03_micropython/10_micropython_wifi_ap_captive`: Find a way to make the popup load faster (esp. on Windows)
