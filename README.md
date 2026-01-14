@@ -1,3 +1,25 @@
+## Expanded Web - Fall 2025
+
+## Course Info
+
+- INTM-SHU 201 Expanded Web
+- IMA, NYU Shanghai
+- Tue & Thu 2:15 PM - 3:30 PM
+
+## Instructor Info
+
+- Gottfried Haider ([profile](https://shanghai.nyu.edu/academics/faculty/directory/gottfried-haider))
+- For contact info and office hours, please refer to class email.
+
+## Overview
+
+This repository contains example sketches that explore the combination between the web/internet and the physical realm in three different technical varieties (which are not meant to be exclusive, or prescriptive for ways the two can be put together):
+
+- [[01](01_p5js_webserial)] Expanding p5.js with [p5.webserial.js](https://github.com/gohai/p5.webserial) to interface with Arduino
+- [[02](02_node)] Server-side physical computing with Node.js
+- [[03](03_micropython)] Turning microcontrollers (ESP32) into low-{tech,power,cost} hosts for websites using MicroPython
+
+
 ### Future work
 
 * `02_node/06_node_dynamic_messages`: Switch from httpGet() and httpPost() to fetch() everywhere?
